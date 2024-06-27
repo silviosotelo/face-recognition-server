@@ -1,0 +1,4 @@
+/build
+/node_modules
+/package-lock.json
+/tfjs_binding.node

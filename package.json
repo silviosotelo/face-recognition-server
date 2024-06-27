@@ -1,0 +1,29 @@
+{
+  "name": "face-recognition-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "3.1.0",
+    "body-parser": "^1.20.2",
+    "bootstrap": "^5.3.3",
+    "canvas": "^2.11.2",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "face-api.js": "^0.22.2",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "sqlite3": "^5.1.7",
+    "windows-autoconf": "^1.11.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

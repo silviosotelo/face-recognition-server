@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconocimiento Facial</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 50px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    #video {
+      border: 2px solid #007bff;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 text-center">
+        <h1>Registro de Usuario</h1>
+        <div class="form-group">
+          <input type="text" id="idCliente" class="form-control" placeholder="Id Cliente">
+          <input type="text" id="nameCliente" class="form-control" placeholder="Nombre">
+          <input type="text" id="ciCliente" class="form-control" placeholder="CI">
+        </div>
+        <div class="form-group">
+          <video id="video" width="100%" height="auto" autoplay></video>
+        </div>
+        <button id="register" class="btn btn-primary btn-block">Registrar</button>
+        
+        <hr>
+        
+        <h1>Reconocimiento Facial</h1>
+        <button id="recognize" class="btn btn-success btn-block">Reconocer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    const video = document.getElementById('video');
+    const registerButton = document.getElementById('register');
+    const recognizeButton = document.getElementById('recognize');
+    const idInput = document.getElementById('idCliente');
+    const nameInput = document.getElementById('nameCliente');
+    const ciInput = document.getElementById('ciCliente');
+
+    // Acceder a la cámara web
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+      });
+
+    const captureImage = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/jpeg').split(',')[1];
+    };
+
+    registerButton.addEventListener('click', async () => {
+      const id = idInput.value;
+      const name = nameInput.value;
+      const ci = ciInput.value;
+      const image = captureImage();
+      
+      const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id, name, ci, image })
+      });
+
+      const result = await response.json();
+      console.log(result);
+    });
+
+    recognizeButton.addEventListener('click', async () => {
+      const image = captureImage();
+
+      const response = await fetch('http://localhost:3000/recognize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ image })
+      });
+
+      const result = await response.json();
+      console.log(result);
+    });
+  </script>
+</body>
+</html>
