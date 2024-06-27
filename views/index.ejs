@@ -26,9 +26,7 @@
       <div class="col-md-6 offset-md-3 text-center">
         <h1>Registro de Usuario</h1>
         <div class="form-group">
-          <input type="text" id="idCliente" class="form-control" placeholder="Id Cliente">
-          <input type="text" id="nameCliente" class="form-control" placeholder="Nombre">
-          <input type="text" id="ciCliente" class="form-control" placeholder="CI">
+          <input type="text" id="name" class="form-control" placeholder="Nombre">
         </div>
         <div class="form-group">
           <video id="video" width="100%" height="auto" autoplay></video>
@@ -51,9 +49,7 @@
     const video = document.getElementById('video');
     const registerButton = document.getElementById('register');
     const recognizeButton = document.getElementById('recognize');
-    const idInput = document.getElementById('idCliente');
-    const nameInput = document.getElementById('nameCliente');
-    const ciInput = document.getElementById('ciCliente');
+    const nameInput = document.getElementById('name');
 
     // Acceder a la cámara web
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -71,9 +67,7 @@
     };
 
     registerButton.addEventListener('click', async () => {
-      const id = idInput.value;
       const name = nameInput.value;
-      const ci = ciInput.value;
       const image = captureImage();
       
       const response = await fetch('http://localhost:3000/register', {
@@ -81,7 +75,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id, name, ci, image })
+        body: JSON.stringify({ name, image })
       });
 
       const result = await response.json();
