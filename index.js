@@ -72,7 +72,7 @@ app.post('/register', async (req, res) => {
 
             const descriptor = JSON.stringify(Array.from(detections.descriptor));
             console.log('Descriptor: ', descriptor);
-            db.run(`INSERT INTO users (id_cliente, name, ci, descriptor) VALUES (?, ?, ?, ?)`, [id, name, ci, descriptor], function (err) {
+            db.run(`INSERT INTO users (name, descriptor) VALUES (?, ?, ?, ?)`, [id, name, ci, descriptor], function (err) {
                 if (err) {
                     return res.status(500).json({ error: err.message });
                 }
@@ -109,7 +109,7 @@ app.post('/recognize', async (req, res) => {
                     return res.status(400).json({ error: 'No face detected' });
                 }
 
-                const query = `SELECT id_cliente, name, ci, descriptor FROM users`;
+                const query = `SELECT name, descriptor FROM users`;
                 db.all(query, [], (err, rows) => {
                     if (err) {
                         return res.status(500).json({ error: err.message });
@@ -123,7 +123,7 @@ app.post('/recognize', async (req, res) => {
                         const distance = faceapi.euclideanDistance(detections.descriptor, dbDescriptor);
                         if (distance < bestDistance) {
                             bestDistance = distance;
-                            bestMatch = `${row.id_cliente} - ${row.name} - ${row.ci}`;
+                            bestMatch = row.name;
                         }
                     });
 
